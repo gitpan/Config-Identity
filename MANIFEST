@@ -6,7 +6,6 @@ README
 lib/Config/Identity.pm
 lib/Config/Identity/GitHub.pm
 lib/Config/Identity/PAUSE.pm
-t/.01-basic.t.swp
 t/01-basic.t
 t/assets/github/.github
 t/assets/gpg/pubring.gpg

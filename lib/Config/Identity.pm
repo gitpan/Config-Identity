@@ -1,6 +1,6 @@
 package Config::Identity;
 BEGIN {
-  $Config::Identity::VERSION = '0.0010';
+  $Config::Identity::VERSION = '0.0012';
 }
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
@@ -130,23 +130,29 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0010
+version 0.0012
 
 =head1 SYNOPSIS
 
-    # 1. Find either $HOME/.pause-identity or $HOME/.pause
-    # 2. Decrypt the found file (if necessary), read, and parse it
-    # 3. Check to make sure %identity has 'user' and 'password'
+PAUSE:
 
     use Config::Identity::PAUSE;
+
+    # 1. Find either $HOME/.pause-identity or $HOME/.pause
+    # 2. Decrypt the found file (if necessary), read, and parse it
+    # 3. Throw an exception unless  %identity has 'user' and 'password' defined
+
     my %identity = Config::Identity::PAUSE->load;
     print "user: $identity{user} password: $identity{password}\n";
-     
-    # 1. Find either $HOME/.github-identity or $HOME/.github
-    # 2. Decrypt the found file (if necessary) read, and parse it
-    # 3. Check to make sure %identity has 'login' and 'token'
+
+GitHub API:
 
     use Config::Identity::GitHub;
+
+    # 1. Find either $HOME/.github-identity or $HOME/.github
+    # 2. Decrypt the found file (if necessary) read, and parse it
+    # 3. Throw an exception unless %identity has 'login' and 'token' defined
+
     my %identity = Config::Identity::PAUSE->load;
     print "login: $identity{login} token: $identity{token}\n";
 
@@ -156,9 +162,32 @@ Config::Identity is a tool for loadiing (and optionally decrypting via GnuPG) us
 
 For GitHub API access, an identity is a C<login>/C<token> pair
 
-For PAUSE access, an identity is a C<user>/C<pass> pair
+For PAUSE access, an identity is a C<user>/C<password> pair
 
 See the SYNOPSIS for usage
+
+=head1 Encrypt your identity information with GnuPG
+
+If you've never used GnuPG before, first initialize it:
+
+    # Follow the prompts to create a new key for yourself
+    gpg --gen-key 
+
+To encrypt your GitHub identity with GnuPG using the above key:
+
+    # Follow the prompts, using the above key as the "recipient"
+    # Use ^D once you've finished typing out your authentication information
+    gpg -ea > $HOME/.github
+
+=head1 Suggested PAUSE identity format
+
+    user <user>
+    password <password>
+
+=head1 Suggested GitHub identity format
+
+    login <login>
+    token <token>
 
 =head1 USAGE
 
