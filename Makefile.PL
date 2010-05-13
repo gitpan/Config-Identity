@@ -23,7 +23,7 @@ my %WriteMakefileArgs = (
                                            },
                        'ABSTRACT' => 'Load (and optionally decrypt via GnuPG) user/pass identity information ',
                        'EXE_FILES' => [],
-                       'VERSION' => '0.0012',
+                       'VERSION' => '0.0013',
                        'PREREQ_PM' => {
                                         'File::HomeDir' => '0',
                                         'File::Spec' => '0',

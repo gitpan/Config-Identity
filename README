@@ -3,7 +3,7 @@ NAME
     identity information
 
 VERSION
-    version 0.0012
+    version 0.0013
 
 SYNOPSIS
     PAUSE:
@@ -38,7 +38,18 @@ DESCRIPTION
 
     See the SYNOPSIS for usage
 
-Encrypt your identity information with GnuPG
+Using custom "gpg" or passing custom arguments
+    You can specify a custom "gpg" executable by setting the CI_GPG
+    environment variable
+
+        export CI_GPG="$HOME/bin/gpg"
+
+    You can pass custom arguments by setting the CI_GPG_ARGUMENTS
+    environment variable
+
+        export CI_GPG_ARGUMENTS="--no-secmem-warning"
+
+Encrypting your identity information with GnuPG
     If you've never used GnuPG before, first initialize it:
 
         # Follow the prompts to create a new key for yourself
@@ -50,11 +61,27 @@ Encrypt your identity information with GnuPG
         # Use ^D once you've finished typing out your authentication information
         gpg -ea > $HOME/.github
 
-Suggested PAUSE identity format
+Caching your GnuPG secret key via gpg-agent
+    Put the following in your .*rc
+
+        if which gpg-agent 1>/dev/null
+        then
+            if test -f $HOME/.gpg-agent-info && \
+                kill -0 `cut -d: -f 2 $HOME/.gpg-agent-info` 2>/dev/null
+            then
+                . "${HOME}/.gpg-agent-info"
+                export GPG_AGENT_INFO
+            else
+                eval `gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"`
+            fi
+        else
+        fi
+
+PAUSE identity format
         user <user>
         password <password>
 
-Suggested GitHub identity format
+GitHub identity format
         login <login>
         token <token>
 

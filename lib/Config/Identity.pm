@@ -1,6 +1,6 @@
 package Config::Identity;
 BEGIN {
-  $Config::Identity::VERSION = '0.0012';
+  $Config::Identity::VERSION = '0.0013';
 }
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
@@ -130,7 +130,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0012
+version 0.0013
 
 =head1 SYNOPSIS
 
@@ -166,7 +166,17 @@ For PAUSE access, an identity is a C<user>/C<password> pair
 
 See the SYNOPSIS for usage
 
-=head1 Encrypt your identity information with GnuPG
+=head1 Using custom C<gpg> or passing custom arguments
+
+You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
+
+    export CI_GPG="$HOME/bin/gpg"
+
+You can pass custom arguments by setting the CI_GPG_ARGUMENTS environment variable
+
+    export CI_GPG_ARGUMENTS="--no-secmem-warning"
+
+=head1 Encrypting your identity information with GnuPG
 
 If you've never used GnuPG before, first initialize it:
 
@@ -179,12 +189,29 @@ To encrypt your GitHub identity with GnuPG using the above key:
     # Use ^D once you've finished typing out your authentication information
     gpg -ea > $HOME/.github
 
-=head1 Suggested PAUSE identity format
+=head1 Caching your GnuPG secret key via gpg-agent
+
+Put the following in your .*rc
+
+    if which gpg-agent 1>/dev/null
+    then
+        if test -f $HOME/.gpg-agent-info && \
+            kill -0 `cut -d: -f 2 $HOME/.gpg-agent-info` 2>/dev/null
+        then
+            . "${HOME}/.gpg-agent-info"
+            export GPG_AGENT_INFO
+        else
+            eval `gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"`
+        fi
+    else
+    fi
+
+=head1 PAUSE identity format
 
     user <user>
     password <password>
 
-=head1 Suggested GitHub identity format
+=head1 GitHub identity format
 
     login <login>
     token <token>
