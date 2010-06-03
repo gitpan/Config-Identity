@@ -1,6 +1,6 @@
 package Config::Identity;
 BEGIN {
-  $Config::Identity::VERSION = '0.0013';
+  $Config::Identity::VERSION = '0.0014';
 }
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
@@ -108,6 +108,14 @@ sub load_best {
     my $self = shift;
     my $stub = shift;
 
+    die "Unable to find .$stub-identity or .$stub" unless my $path = $self->best( $stub );
+    return $self->load( $path );
+}
+
+sub try_best {
+    my $self = shift;
+    my $stub = shift;
+
     return unless my $path = $self->best( $stub );
     return $self->load( $path );
 }
@@ -130,7 +138,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0013
+version 0.0014
 
 =head1 SYNOPSIS
 
@@ -164,9 +172,26 @@ For GitHub API access, an identity is a C<login>/C<token> pair
 
 For PAUSE access, an identity is a C<user>/C<password> pair
 
-See the SYNOPSIS for usage
+=head1 USAGE
 
-=head1 Using custom C<gpg> or passing custom arguments
+=head2 %identity = Config::Identity->load_best( <stub> )
+
+First attempt to load an identity from $HOME/.<stub>-identity
+
+If that file does not exist, then attempt to load an identity from $HOME/.<stub>
+
+The file may be optionally GnuPG encrypted
+
+%identity will be populated like so:
+
+    <key> <value>
+
+For example:
+
+    username alice
+    password hunter2
+
+=head1 Using a custom C<gpg> or passing custom arguments
 
 You can specify a custom C<gpg> executable by setting the CI_GPG environment variable
 
@@ -215,10 +240,6 @@ Put the following in your .*rc
 
     login <login>
     token <token>
-
-=head1 USAGE
-
-See the SYNOPSIS
 
 =head1 AUTHOR
 
