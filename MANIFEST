@@ -15,6 +15,7 @@ t/assets/gpg/trustdb.gpg
 t/assets/h0/.test
 t/assets/h0/.test-identity
 t/assets/h1/.test
+t/assets/pause-username/.pause-identity
 t/assets/pause/.pause-identity
 t/assets/test.asc
 t/assets/test.gpg

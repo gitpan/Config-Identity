@@ -1,6 +1,6 @@
 package Config::Identity;
 BEGIN {
-  $Config::Identity::VERSION = '0.0014';
+  $Config::Identity::VERSION = '0.0015';
 }
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
@@ -138,7 +138,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0014
+version 0.0015
 
 =head1 SYNOPSIS
 
@@ -235,6 +235,8 @@ Put the following in your .*rc
 
     user <user>
     password <password>
+
+C<username> can also be used as alias for C<user>
 
 =head1 GitHub identity format
 
