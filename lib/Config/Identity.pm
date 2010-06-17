@@ -1,6 +1,6 @@
 package Config::Identity;
 BEGIN {
-  $Config::Identity::VERSION = '0.0015';
+  $Config::Identity::VERSION = '0.0016';
 }
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
 
@@ -138,7 +138,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0015
+version 0.0016
 
 =head1 SYNOPSIS
 
