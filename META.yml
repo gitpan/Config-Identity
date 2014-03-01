@@ -18,4 +18,4 @@ requires:
   File::Spec: 0
   File::Which: 0
   IPC::Run: 0
-version: 0.0017
+version: 0.0018

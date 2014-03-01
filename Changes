@@ -1,6 +1,9 @@
 TODO:
     - Trying GPG on empty file
 
+0.0018 Saturday March 01 13:40:31 PST 2014:
+    - Be more sane with how we interact with gpg
+
 0.0017 Saturday March 01 11:12:09 PST 2014:
     - Use IPC::Run instead of IPC::Open3
 

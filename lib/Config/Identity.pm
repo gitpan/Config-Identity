@@ -1,6 +1,6 @@
 package Config::Identity;
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
-$Config::Identity::VERSION = '0.0017';
+$Config::Identity::VERSION = '0.0018';
 
 use strict;
 use warnings;
@@ -24,16 +24,18 @@ sub GPG_ARGUMENTS() { $ENV{CI_GPG_ARGUMENTS} || '' }
 # TODO Do not even need to do this, since the file is on disk already...
 sub decrypt {
     my $self = shift;
-    my $input = shift;
+    my $file = shift;
 
     my $gpg = GPG or croak "Missing gpg";
     my $gpg_arguments = GPG_ARGUMENTS;
     my $run;
-    $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0 --status-fd 1";
-    $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0";
-    my $process = start( [ split m/\s+/, $run ], '<pipe', \*IN, '>pipe', \*OUT, '2>pipe', \*ERR );
-    print IN $input;
-    close IN;
+    # Old versions, please ignore
+    #$run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0 --status-fd 1";
+    #$run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0";
+    $run = "$gpg $gpg_arguments -qd --no-tty";
+    my @run = split m/\s+/, $run;
+    push @run, $file;
+    my $process = start( \@run, '>pipe', \*OUT, '2>pipe', \*ERR );
     my $output = join '', <OUT>;
     my $_error = join '', <ERR>;
     finish $process;
@@ -74,7 +76,7 @@ sub read {
     close $handle or warn $!;
 
     if ( $binary || $content =~ m/----BEGIN PGP MESSAGE----/ ) {
-        my ( $_content, $error ) = $self->decrypt( $content );
+        my ( $_content, $error ) = $self->decrypt( $file );
         if ( $error ) {
             carp "Error during decryption of content" . $binary ? '' : "\n$content";
             croak "Error during decryption of $file:\n$error";
@@ -135,7 +137,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0017
+version 0.0018
 
 =head1 SYNOPSIS
 
