@@ -5,17 +5,17 @@ author:
 build_requires:
   Test::Most: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.31
-generated_by: 'Dist::Zilla version 2.101170'
+  ExtUtils::MakeMaker: 6.30
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 5.013, CPAN::Meta::Converter version 2.130880'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Config-Identity
-recommends: {}
 requires:
   File::HomeDir: 0
   File::Spec: 0
   File::Which: 0
-  IPC::Open3: 0
-version: 0.0016
+  IPC::Run: 0
+version: 0.0017

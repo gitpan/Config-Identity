@@ -1,16 +1,12 @@
 package Config::Identity;
-BEGIN {
-  $Config::Identity::VERSION = '0.0016';
-}
 # ABSTRACT: Load (and optionally decrypt via GnuPG) user/pass identity information 
-
+$Config::Identity::VERSION = '0.0017';
 
 use strict;
 use warnings;
 
 use Carp;
-use IPC::Open3 qw/ open3 /;
-use Symbol qw/ gensym /;
+use IPC::Run qw/ start finish /;
 use File::HomeDir();
 use File::Spec;
 
@@ -30,17 +26,17 @@ sub decrypt {
     my $self = shift;
     my $input = shift;
 
-    my ( $in, $out, $error ) = ( gensym, gensym, gensym );
     my $gpg = GPG or croak "Missing gpg";
     my $gpg_arguments = GPG_ARGUMENTS;
     my $run;
     $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0 --status-fd 1";
     $run = "$gpg $gpg_arguments -qd --no-tty --command-fd 0";
-    my $process = open3( $in, $out, $error, $run );
-    print $in $input;
-    close $in;
-    my $output = join '', <$out>;
-    my $_error = join '', <$error>;
+    my $process = start( [ split m/\s+/, $run ], '<pipe', \*IN, '>pipe', \*OUT, '2>pipe', \*ERR );
+    print IN $input;
+    close IN;
+    my $output = join '', <OUT>;
+    my $_error = join '', <ERR>;
+    finish $process;
     return ( $output, $_error );
 }
 
@@ -130,6 +126,7 @@ sub load {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -138,7 +135,7 @@ Config::Identity - Load (and optionally decrypt via GnuPG) user/pass identity in
 
 =head1 VERSION
 
-version 0.0016
+version 0.0017
 
 =head1 SYNOPSIS
 
@@ -245,14 +242,13 @@ C<username> can also be used as alias for C<user>
 
 =head1 AUTHOR
 
-  Robert Krimen <robertkrimen@gmail.com>
+Robert Krimen <robertkrimen@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Robert Krimen.
+This software is copyright (c) 2014 by Robert Krimen.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
